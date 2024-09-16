@@ -17,6 +17,42 @@ DMD dmd(DISPLAYS_ACROSS,DISPLAYS_DOWN);
 String string1;
 String string2;
 
+void receiveEvent(int howMany) {
+int i = 0;
+  while (Wire.available() && i < sizeof(receivedData) - 1) {
+    receivedData[i++] = Wire.read();  // Read byte by byte from I2C
+  }
+  receivedData[i] = '\0';  // Null-terminate the string
+
+  // Convert received data to a String object
+  String receivedString = String(receivedData);
+
+  // Split the string at the delimiter (comma in this case)
+  int delimiterIndex = receivedString.indexOf(',');
+  string1 = receivedString.substring(0, delimiterIndex);  // First string
+  string2 = receivedString.substring(delimiterIndex + 1);  // Second string
+
+  // Print the two strings to Serial
+  Serial.println("Received String 1: " + string1);
+  Serial.println("Received String 2: " + string2);
+
+}
+
+void setup() {
+  Wire.begin(I2C_SLAVE_ADDR);  // Join I2C bus as a slave
+  Wire.onReceive(receiveEvent);  // Register event handler
+  Serial.begin(9600);  // Start serial communication for debugging
+
+  // Period in microseconds to call ScanDMD. Anything longer than 5000 (5ms) and you can see flicker.
+  Timer1.initialize(5000);  
+
+  // Attach the Timer1 interrupt to ScanDMD which goes to dmd.scanDisplayBySPI()
+  Timer1.attachInterrupt(ScanDMD);  
+  
+  // True is normal (all pixels off), false is negative (all pixels on)
+  dmd.clearScreen(true);            
+}
+
 void ScanDMD()
 { 
   dmd.scanDisplayBySPI();
@@ -51,47 +87,20 @@ void scrollText(String dispString, String dispString1)
   }
 }
 
-void setup() {
-  Wire.begin(I2C_SLAVE_ADDR);  // Join I2C bus as a slave
-  Wire.onReceive(receiveEvent);  // Register event handler
-  Serial.begin(9600);  // Start serial communication for debugging
+String deutschLetters(String word){
+  word.replace('ä', ']');
+  word.replace('ö', '^');
+  word.replace('ü', '_');
+  word.replace('ß', '`');
 
-  // Period in microseconds to call ScanDMD. Anything longer than 5000 (5ms) and you can see flicker.
-  Timer1.initialize(5000);  
-
-  // Attach the Timer1 interrupt to ScanDMD which goes to dmd.scanDisplayBySPI()
-  Timer1.attachInterrupt(ScanDMD);  
-  
-  // True is normal (all pixels off), false is negative (all pixels on)
-  dmd.clearScreen(true);            
+  return word;
 }
 
 void loop() {
   String eng = string1;
-  String deu = string2;
-  int REPETITIONS = 3;
+  String deu = deutschLetters(string2);
+  int REPETITIONS = 2;
   for (int i = 0; i < REPETITIONS; i++){
     scrollText(deu, eng);
   }
-}
-
-void receiveEvent(int howMany) {
-int i = 0;
-  while (Wire.available() && i < sizeof(receivedData) - 1) {
-    receivedData[i++] = Wire.read();  // Read byte by byte from I2C
-  }
-  receivedData[i] = '\0';  // Null-terminate the string
-
-  // Convert received data to a String object
-  String receivedString = String(receivedData);
-
-  // Split the string at the delimiter (comma in this case)
-  int delimiterIndex = receivedString.indexOf(',');
-  string1 = receivedString.substring(0, delimiterIndex);  // First string
-  string2 = receivedString.substring(delimiterIndex + 1);  // Second string
-
-  // Print the two strings to Serial
-  Serial.println("Received String 1: " + string1);
-  Serial.println("Received String 2: " + string2);
-
 }
