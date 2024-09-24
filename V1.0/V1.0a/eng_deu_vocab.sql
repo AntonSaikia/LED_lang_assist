@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Sep 10, 2024 at 09:20 AM
+-- Generation Time: Sep 24, 2024 at 01:41 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.0.30
 
@@ -95,6 +95,28 @@ INSERT INTO `vocabulary` (`id`, `English`, `Deutsch`) VALUES
 (54, 'empty', 'leer'),
 (55, 'stairway', 'die Treppe'),
 (56, 'elevator', 'der Aufzug');
+(57, 'like to', 'gerne'),
+(58, 'only', 'nur'),
+(59, 'together', 'zusammen'),
+(60, 'to spell', 'buchstabieren'),
+(61, 'a little', 'ein bisschen'),
+(62, 'quick', 'schnell'),
+(63, 'old', 'alt'),
+(64, 'new', 'neu'),
+(65, 'broken', 'kaputt'),
+(66, 'interesting', 'interessant'),
+(67, 'document', 'die Unterlage'),
+(68, 'important', 'wichtig'),
+(69, 'suitcase', 'der Koffer'),
+(70, 'heavy', 'schwer'),
+(71, 'busy', 'beschäftigt'),
+(72, 'hungry', 'hungrig'),
+(73, 'kitchen', 'die Küche'),
+(74, 'clean', 'sauber'),
+(75, 'neighbor', 'der Nachbar'),
+(76, 'angry', 'w_tend'),
+(77, 'cable', 'das Kabel'),
+(78, 'long', 'lang');
 
 --
 -- Indexes for dumped tables
@@ -114,7 +136,7 @@ ALTER TABLE `vocabulary`
 -- AUTO_INCREMENT for table `vocabulary`
 --
 ALTER TABLE `vocabulary`
-  MODIFY `id` int(100) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=57;
+  MODIFY `id` int(100) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=79;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
